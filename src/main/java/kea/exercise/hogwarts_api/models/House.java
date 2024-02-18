@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 public class House {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String founder;

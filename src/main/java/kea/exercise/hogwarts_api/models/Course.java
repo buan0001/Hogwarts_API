@@ -9,19 +9,18 @@ import java.util.List;
 @Entity
 public class Course {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
    private String subject;
    private int schoolYear;
    private boolean current;
-   //private String teacher;
+
     @ManyToOne
    private Teacher teacher;
 
    @OneToMany
    private List<Student> students;
 
-   // Teacher teacher
     public Course(String subject, int schoolYear, boolean current, Teacher teacher, List<Student> students) {
         this.subject = subject;
         this.schoolYear = schoolYear;
@@ -34,6 +33,10 @@ public class Course {
     }
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getSubject() {

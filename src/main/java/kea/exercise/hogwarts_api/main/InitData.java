@@ -64,7 +64,7 @@ public class InitData implements CommandLineRunner {
         var padma = studentRepo.save(new Student("Padma", null, "Patil", LocalDate.now(), ravenclaw,
                 false, 1991, 1998, false));
 
-        List<Student> studentsInCourse = Arrays.asList(harry, ron, hermione, hannah, justin, megan, vincent, draco, pansy, terry, sue, padma);
+        List<Student> studentsInCourse = Arrays.asList(harry, ron, hermione, hannah, justin, megan, vincent, draco, pansy, terry, sue);
 
         courseRepo.save(new Course("Potions", 1991, true, snape, studentsInCourse));
     }
