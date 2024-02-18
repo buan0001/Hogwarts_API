@@ -1,4 +1,4 @@
-package kea.exercise.hogwarts_api.main;
+package kea.exercise.hogwarts_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
