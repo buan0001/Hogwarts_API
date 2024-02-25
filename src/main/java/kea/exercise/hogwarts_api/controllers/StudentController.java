@@ -28,8 +28,13 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateOne(@PathVariable int id, @RequestBody Student updatedStudent) {
+    public ResponseEntity<StudentResponseDTO> updateOne(@PathVariable int id, @RequestBody StudentRequestDTO updatedStudent) {
         return ResponseEntity.of(service.updateIfExists(id, updatedStudent));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<StudentResponseDTO> changeYearOrPrefectStatus(@PathVariable int id, @RequestBody StudentRequestDTO changedStudent) {
+        return ResponseEntity.of(service.patchIfExists(id, changedStudent));
     }
 
     @DeleteMapping("/{id}")

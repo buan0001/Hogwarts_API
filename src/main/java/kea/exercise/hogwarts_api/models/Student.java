@@ -14,11 +14,14 @@ public class Student {
     private LocalDate dateOfBirth;
 
     @ManyToOne
+    @JoinColumn(name = "house")
     private House house;
     private boolean prefect;
     private int enrollmentYear;
     private int graduationYear;
     private boolean graduated;
+
+    private int schoolYear;
 
     public Student() {
     }
@@ -32,7 +35,7 @@ public class Student {
                    boolean prefect,
                    int enrollmentYear,
                    int graduationYear,
-                   boolean graduated) {
+                   boolean graduated,int schoolYear) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -42,6 +45,7 @@ public class Student {
         this.enrollmentYear = enrollmentYear;
         this.graduationYear = graduationYear;
         this.graduated = graduated;
+        this.schoolYear = schoolYear;
     }
 
     public Student(Student other) {
@@ -54,7 +58,17 @@ public class Student {
         enrollmentYear = other.getEnrollmentYear();
         graduationYear = other.getGraduationYear();
         graduated = other.isGraduated();
+        schoolYear = other.getSchoolYear();
     }
+
+    public int getSchoolYear() {
+        return schoolYear;
+    }
+
+    public void setSchoolYear(int schoolYear) {
+        this.schoolYear = schoolYear;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -138,5 +152,9 @@ public class Student {
 
     public void setGraduated(boolean graduated) {
         this.graduated = graduated;
+    }
+
+    public String getFullName() {
+        return getFirstName() + " " + getMiddleName() + " " + getLastName();
     }
 }

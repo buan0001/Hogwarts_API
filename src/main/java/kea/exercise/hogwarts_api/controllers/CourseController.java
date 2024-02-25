@@ -1,132 +1,79 @@
 package kea.exercise.hogwarts_api.controllers;
 
+import kea.exercise.hogwarts_api.dtos.CourseStudentsRequestDTO;
 import kea.exercise.hogwarts_api.models.Course;
 import kea.exercise.hogwarts_api.models.Student;
 import kea.exercise.hogwarts_api.models.Teacher;
-import kea.exercise.hogwarts_api.repositories.CourseRepository;
 import kea.exercise.hogwarts_api.repositories.StudentRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import kea.exercise.hogwarts_api.services.CourseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Set;
 
 @RestController
 @RequestMapping("courses")
 public class CourseController {
-    private CourseRepository repo;
-    private StudentRepository studentRepo;
+    private CourseService service;
 
-    public CourseController(CourseRepository repo, StudentRepository studentRepo) {
-        this.repo = repo;
-        this.studentRepo = studentRepo;
+    public CourseController(CourseService service) {
+        this.service = service;
     }
 
     @GetMapping
     public List<Course> getAll() {
-        return repo.findAll();
+        return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public Course getOneCourse(@PathVariable int id) {
-        return repo.findById(id).orElse(null);
+    public ResponseEntity<Course> getOneCourse(@PathVariable int id) {
+        return ResponseEntity.of(service.findById(id)) ;
     }
 
     @GetMapping("/{id}/teacher")
-    public Teacher getOneTeacherByCourse(@PathVariable int id) {
-        Optional<Course> course = repo.findById(id);
-        if (course.isPresent()) {
-            return course.get().getTeacher();
-        } else {
-            return null;
-        }
+    public ResponseEntity<Teacher> getOneTeacherByCourse(@PathVariable int id) {
+        return ResponseEntity.of(service.getTeacherFromCourse(id)) ;
     }
 
     @GetMapping("/{id}/students")
-    public List<Student> getStudentsByCourse(@PathVariable int id) {
-        Optional<Course> course = repo.findById(id);
-        if (course.isPresent()) {
-            return course.get().getStudents();
-        } else {
-            return null;
-        }
+    public ResponseEntity<Set<Student> > getStudentsByCourse(@PathVariable int id) {
+        return ResponseEntity.of(service.studentsFromCourse(id)) ;
     }
 
     @PostMapping
-    public Course createOne(@RequestBody Course newCourse) {
-        return repo.save(newCourse);
+    public ResponseEntity<Course> createOne(@RequestBody Course newCourse) {
+        return ResponseEntity.of(service.save(newCourse)) ;
+    }
+
+    @PostMapping("/{id}/students")
+    public ResponseEntity<Set<Student>> addStudentsToCourse(@PathVariable int id, @RequestBody CourseStudentsRequestDTO studentIds) {
+        return ResponseEntity.of(service.addStudentsToCourse(id, studentIds)) ;
     }
 
     @PutMapping("/{id}")
-    public Course updateFullCourse(@PathVariable int id, @RequestBody Course updatedCourse) {
-        Optional<Course> originalCourse = repo.findById(id);
-        if (originalCourse.isPresent()) {
-            updatedCourse.setId(id);
-            return repo.save(updatedCourse);
-        } else {
-            return null;
-        }
+    public ResponseEntity<Course> updateFullCourse(@PathVariable int id, @RequestBody Course updatedCourse) {
+        return ResponseEntity.of(service.updateFullCourse(id, updatedCourse)) ;
     }
 
-    @PutMapping("/{id}/students/{studentId}")
-    public Course addStudentToCourse(@PathVariable int id, @PathVariable int studentId) {
-        Optional<Course> originalCourse = repo.findById(id);
-        if (originalCourse.isPresent()) {
-            Optional<Student> foundStudent = studentRepo.findById(studentId);
-            if (foundStudent.isPresent()) {
-                originalCourse.get().getStudents().add(foundStudent.get());
-                return repo.save(originalCourse.get());
-            }
-        }
-        return null;
-    }
 
-    @PutMapping("/{id}/teacher")
-    public Course updateOne(@PathVariable int id, @RequestBody Teacher newTeacher) {
-        Optional<Course> originalCourse = repo.findById(id);
-        if (originalCourse.isPresent()) {
-                originalCourse.get().setTeacher(newTeacher);
-                return repo.save(originalCourse.get());
-        }
-        return null;
+
+    @PatchMapping("/{id}/teacher")
+    public ResponseEntity<Teacher> updateOne(@PathVariable int id, @RequestBody Teacher newTeacher) {
+        return ResponseEntity.of(service.changeTeacher(id, newTeacher)) ;
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Course> deleteCourse(@PathVariable int id) {
-        Course deleteThis = repo.findById(id).orElse(null);
-        if (deleteThis != null) {
-            repo.deleteById(id);
-            return ResponseEntity.ok().body(deleteThis);
-
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.of(service.delete(id));
     }
 
-    @DeleteMapping("/{id}/teacher")
-    public ResponseEntity<Course> deleteTeacherFromCourse(@PathVariable int id) {
-        Optional<Course> foundCourse = repo.findById(id);
-        if (foundCourse.isPresent()) {
-            foundCourse.get().setTeacher(null);
-            repo.save(foundCourse.get());
-        }
-        return ResponseEntity.of(foundCourse);
-    }
 
 
 
     @DeleteMapping("/{id}/students/{studentId}")
-    public ResponseEntity<Course> deleteStudentFromCourse(@PathVariable int id, @PathVariable int studentId) {
-        Optional<Course> foundCourse = repo.findById(id);
-        if (foundCourse.isPresent()){
-            Course course = foundCourse.get();
-            course.getStudents().removeIf(student -> student.getId() == studentId);
-           repo.save(course);
-        }
-        return ResponseEntity.of(foundCourse);
+    public ResponseEntity<Student> deleteStudentFromCourse(@PathVariable int id, @PathVariable int studentId) {
+        return ResponseEntity.of(service.removeStudent(id, studentId)) ;
     }
 }

@@ -14,6 +14,7 @@ public class Teacher {
     private LocalDate dateOfBirth;
     //private String house;
     @ManyToOne
+    @JoinColumn(name = "house")
      private House house;
     private boolean headOfHouse;
     //private String employment;
@@ -35,6 +36,10 @@ public class Teacher {
     }
 
     public Teacher() {
+    }
+
+    public String getFullName() {
+        return firstName + " " + middleName + " " + lastName;
     }
     public void setId(int id) {
         this.id = id;

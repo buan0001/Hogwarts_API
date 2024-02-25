@@ -1,20 +1,23 @@
 package kea.exercise.hogwarts_api.dtos;
 
+
+import kea.exercise.hogwarts_api.models.EmpType;
+
 import java.time.LocalDate;
 
-public record StudentRequestDTO
+public record TeacherRequestDTO
         (int id,
          String firstName,
          String middleName,
          String lastName,
          String fullName,
          LocalDate dateOfBirth,
-         Boolean prefect,
-         Integer enrollmentYear,
-         Integer graduationYear,
-         Boolean graduated,
+         Boolean headOfHouse,
+         EmpType employment,
+         LocalDate employmentStart,
+         LocalDate employmentEnd,
          String house) {
-    public StudentRequestDTO {
+    public TeacherRequestDTO {
         if (fullName != null) {
             String[] nameParts = fullName.split(" ");
             firstName = nameParts[0];

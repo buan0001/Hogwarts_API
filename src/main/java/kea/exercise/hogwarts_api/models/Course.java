@@ -5,9 +5,11 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Course {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -15,18 +17,27 @@ public class Course {
    private int schoolYear;
    private boolean current;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
    private Teacher teacher;
 
-   @OneToMany
-   private List<Student> students;
+   @ManyToMany(fetch = FetchType.EAGER)
+   private Set<Student> students;
 
-    public Course(String subject, int schoolYear, boolean current, Teacher teacher, List<Student> students) {
+    public Course(String subject, int schoolYear, boolean current, Teacher teacher, Set<Student> students) {
         this.subject = subject;
         this.schoolYear = schoolYear;
         this.current = current;
         this.teacher = teacher;
         this.students = students;
+    }
+
+    public Course(Course other) {
+        id = other.getId();
+        subject = other.getSubject();
+        schoolYear = other.getSchoolYear();
+        current = other.isCurrent();
+        teacher = other.getTeacher();
+        students = other.getStudents();
     }
 
     public Course() {
@@ -63,13 +74,6 @@ public class Course {
         this.current = current;
     }
 
-//    public String getTeacher() {
-//        return teacher;
-//    }
-//
-//    public void setTeacher(String teacher) {
-//        this.teacher = teacher;
-//    }
     public Teacher getTeacher() {
         return teacher;
     }
@@ -78,11 +82,11 @@ public class Course {
         this.teacher = teacher;
     }
 
-    public List<Student> getStudents() {
+    public Set<Student> getStudents() {
         return students;
     }
 
-    public void setStudents(List<Student> students) {
+    public void setStudents(Set<Student> students) {
         this.students = students;
     }
 }

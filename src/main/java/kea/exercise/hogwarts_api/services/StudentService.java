@@ -31,12 +31,21 @@ public class StudentService {
     }
 
 
-    public Optional<Student> updateIfExists( int id, Student updatedStudent) {
+    public Optional<StudentResponseDTO> updateIfExists( int id, StudentRequestDTO updatedStudent) {
         Optional<Student> originalStudent = repo.findById(id);
         if (originalStudent.isPresent()){
-            updatedStudent.setId(id); repo.save(updatedStudent);
+            Student entity = toEntity(updatedStudent);
+            entity.setId(id);
+            return Optional.of(toDTO(repo.save(entity)) ) ;
         }
-        return originalStudent;
+        return Optional.empty();
+    }
+    public Optional<StudentResponseDTO> patchIfExists(int id, StudentRequestDTO changedProperties) {
+        Optional<Student> originalStudent = repo.findById(id);
+        if (originalStudent.isPresent()){
+            return Optional.of(toDTO(repo.save(updateEntity(originalStudent.get(), changedProperties)))) ;
+        }
+       return Optional.empty();
     }
 
     public Optional<StudentResponseDTO> deleteById(int id) {
@@ -68,9 +77,12 @@ public class StudentService {
     private StudentResponseDTO toDTO(Student entity) {
 
 
-        return new StudentResponseDTO((entity.getId()), (entity.getFirstName()),
-                (entity.getMiddleName()),
-                (entity.getLastName()),
+        return new StudentResponseDTO(
+              (entity.getId()),
+//                (entity.getFirstName()),
+//                (entity.getMiddleName()),
+//                (entity.getLastName()),
+                (entity.getFullName()),
                 (entity.getDateOfBirth()),
                 (entity.getHouse().getName()),
                 (entity.isPrefect()),
@@ -82,4 +94,19 @@ public class StudentService {
         );
     }
 
+
+
+    private Student updateEntity(Student entity, StudentRequestDTO dto) {
+        if (dto.firstName() != null) {entity.setFirstName(dto.firstName());}
+        if (dto.middleName() != null) {entity.setMiddleName(dto.middleName());}
+        if (dto.lastName() != null) {entity.setLastName(dto.lastName());}
+        if (dto.dateOfBirth() != null) {entity.setDateOfBirth(dto.dateOfBirth());}
+        if (dto.house() != null) {entity.setHouse(houseRepository.findById(dto.house()).orElse(null) );}
+        if (dto.prefect() != null) {entity.setPrefect(dto.prefect());}
+        if (dto.enrollmentYear() != null) {entity.setEnrollmentYear(dto.enrollmentYear());}
+        if (dto.graduationYear() != null) {entity.setGraduationYear(dto.graduationYear());}
+        if (dto.graduated() != null) {entity.setGraduated(dto.graduated());}
+
+        return entity;
+    }
 }
