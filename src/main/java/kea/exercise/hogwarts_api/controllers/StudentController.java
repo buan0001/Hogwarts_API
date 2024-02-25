@@ -1,42 +1,38 @@
 package kea.exercise.hogwarts_api.controllers;
 
+import kea.exercise.hogwarts_api.dtos.StudentResponseDTO;
 import kea.exercise.hogwarts_api.models.Student;
-import kea.exercise.hogwarts_api.repositories.StudentRepository;
+import kea.exercise.hogwarts_api.services.StudentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("students")
 public class StudentController {
-    private StudentRepository repo;
+    private final StudentService service;
 
-    public StudentController(StudentRepository repo) {this.repo = repo;}
+    public StudentController(StudentService service) {this.service = service;}
 
     @GetMapping
-    public List<Student> getAll(){return repo.findAll();}
+    public List<StudentResponseDTO> getAll(){return service.findAll();}
 
     @GetMapping("/{id}")
-    public Student getOne(@PathVariable int id){return repo.findById(id).orElse(null);}
+    public StudentResponseDTO getOne(@PathVariable int id){return service.findById(id).orElse(null);}
 
     @PostMapping
-    public Student createOne(@RequestBody Student newStud) {
-        return repo.save(newStud);
+    public StudentResponseDTO createOne(@RequestBody Student newStud) {
+        return service.save(newStud);
     }
 
     @PutMapping("/{id}")
-    public Student updateOne(@PathVariable int id, @RequestBody Student updatedStudent) {
-        Optional<Student> originalStudent = repo.findById(id);
-        if (originalStudent.isPresent()){updatedStudent.setId(id); return repo.save(updatedStudent);}
-        else {return null;}
+    public ResponseEntity<Student> updateOne(@PathVariable int id, @RequestBody Student updatedStudent) {
+        return ResponseEntity.of(service.updateIfExists(id, updatedStudent));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Student> deleteOne(@PathVariable int id) {
-        Optional<Student> deleteThis = repo.findById(id);
-        repo.deleteById(id);
-        return ResponseEntity.of(deleteThis);
+    public ResponseEntity<StudentResponseDTO> deleteOne(@PathVariable int id) {
+        return ResponseEntity.of(service.deleteById(id));
     }
 }

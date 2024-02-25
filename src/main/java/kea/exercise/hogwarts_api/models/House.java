@@ -7,8 +7,9 @@ import java.util.List;
 
 @Entity
 public class House {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+//    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private int id;
+    @Id
     private String name;
     private String founder;
 
@@ -28,9 +29,9 @@ public class House {
 
     public House() {
     }
-    public int getId() {
-        return id;
-    }
+//    public int getId() {
+//        return id;
+//    }
 
     @Override
     public String toString() {

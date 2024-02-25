@@ -98,9 +98,13 @@ public class CourseController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Course> deleteCourse(@PathVariable int id) {
-        Optional<Course> deleteThis = repo.findById(id);
-        repo.deleteById(id);
-        return ResponseEntity.of(deleteThis);
+        Course deleteThis = repo.findById(id).orElse(null);
+        if (deleteThis != null) {
+            repo.deleteById(id);
+            return ResponseEntity.ok().body(deleteThis);
+
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}/teacher")
@@ -116,7 +120,6 @@ public class CourseController {
 
 
     @DeleteMapping("/{id}/students/{studentId}")
-
     public ResponseEntity<Course> deleteStudentFromCourse(@PathVariable int id, @PathVariable int studentId) {
         Optional<Course> foundCourse = repo.findById(id);
         if (foundCourse.isPresent()){
