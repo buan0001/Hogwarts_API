@@ -1,5 +1,6 @@
 package kea.exercise.hogwarts_api.controllers;
 
+import kea.exercise.hogwarts_api.dtos.StudentRequestDTO;
 import kea.exercise.hogwarts_api.dtos.StudentResponseDTO;
 import kea.exercise.hogwarts_api.models.Student;
 import kea.exercise.hogwarts_api.services.StudentService;
@@ -22,7 +23,7 @@ public class StudentController {
     public StudentResponseDTO getOne(@PathVariable int id){return service.findById(id).orElse(null);}
 
     @PostMapping
-    public StudentResponseDTO createOne(@RequestBody Student newStud) {
+    public StudentResponseDTO createOne(@RequestBody StudentRequestDTO newStud) {
         return service.save(newStud);
     }
 

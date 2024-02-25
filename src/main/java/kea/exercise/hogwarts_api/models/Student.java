@@ -12,15 +12,7 @@ public class Student {
     private String middleName;
     private String lastName;
     private LocalDate dateOfBirth;
-    private String headPersonality;
 
-    public String getOWLScore(){
-        return "Wonderful";
-    }
-
-
-
-    //private String house;
     @ManyToOne
     private House house;
     private boolean prefect;

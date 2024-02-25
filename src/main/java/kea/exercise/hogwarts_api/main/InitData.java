@@ -30,10 +30,10 @@ public class InitData implements CommandLineRunner {
     public void run(String... args) {
 
 
-        var gryffindor = houseRepo.save(new House("Gryffindor", "Godric Gryffindor", "Scarlet and gold")) ;
-        var slytherin = houseRepo.save(new House("Slytherin", "Salazar Slytherin", "Green and silver"));
-        var hufflepuff = houseRepo.save(new House("Hufflepuff", "Helga Hufflepuff", "Yellow and black"));
-        var ravenclaw = houseRepo.save(new House("Ravenclaw", "Rowena Ravenclaw", "Blue and bronze"));
+        var gryffindor = houseRepo.save(new House("Gryffindor", "Godric Gryffindor", "Scarlet", "Gold")) ;
+        var slytherin = houseRepo.save(new House("Slytherin", "Salazar Slytherin", "Green", "silver"));
+        var hufflepuff = houseRepo.save(new House("Hufflepuff", "Helga Hufflepuff", "Yellow","Black"));
+        var ravenclaw = houseRepo.save(new House("Ravenclaw", "Rowena Ravenclaw", "Blue","Bronze"));
 
 
         var snape = teacherRepo.save(new Teacher("Severus", null, "Snape", LocalDate.now(), slytherin, true, EmpType.Tenured,

@@ -7,19 +7,20 @@ import java.util.List;
 
 @Entity
 public class House {
-//    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private int id;
+
     @Id
     private String name;
     private String founder;
 
-    private String color;
+    private String color1;
+    private String color2;
     //private List<String> colors;
 
-    public House(String name, String founder, String color) {
+    public House(String name, String founder, String color1, String color2) {
         this.name = name;
         this.founder = founder;
-        this.color = color;
+        this.color1 = color1;
+        this.color2 = color2;
     }
 //    public House(String name, String founder, ArrayList<String> colors) {
 //        this.name = name;
@@ -38,7 +39,7 @@ public class House {
         return "Course{" +
                 "name='" + name + '\'' +
                 ", founder='" + founder + '\'' +
-                ", colors=" + color +
+                ", colors=" + color1 + " " + color2 +
                 '}';
     }
 
@@ -59,18 +60,17 @@ public class House {
         this.founder = founder;
     }
 
-    public String getColor() {
-        return color;
+    public String[] getColors() {
+        return new String[]{color1, color2};
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setColor(String color1, String color2) {
+        this.color1 = color1;
+        this.color2 = color2;
+
     }
-//    public ArrayList<String> getColors() {
-//        return colors;
-//    }
-//
-//    public void setColors(ArrayList<String> colors) {
-//        this.colors = colors;
-//    }
+    public void setColors(ArrayList<String> colors) {
+        this.color1 = colors.get(0);
+        this.color1 = colors.get(1);
+    }
 }

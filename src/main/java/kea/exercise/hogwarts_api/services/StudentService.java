@@ -3,6 +3,7 @@ package kea.exercise.hogwarts_api.services;
 import kea.exercise.hogwarts_api.dtos.StudentRequestDTO;
 import kea.exercise.hogwarts_api.dtos.StudentResponseDTO;
 import kea.exercise.hogwarts_api.models.Student;
+import kea.exercise.hogwarts_api.repositories.HouseRepository;
 import kea.exercise.hogwarts_api.repositories.StudentRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +15,11 @@ public class StudentService {
 
 
     private final StudentRepository repo;
+    private final HouseRepository houseRepository;
 
-    public StudentService(StudentRepository repo) {
+    public StudentService(StudentRepository repo, HouseRepository houseRepository) {
         this.repo = repo;
+        this.houseRepository = houseRepository;
     }
 
     public List<StudentResponseDTO> findAll() {
@@ -47,24 +50,36 @@ public class StudentService {
         return toDTO(newStudent);
     }
 
-    private Student toEntity(StudentRequestDTO newStud) {
-        return new Student()
+    private Student toEntity(StudentRequestDTO dto) {
+        var entity = new Student();
+        entity.setFirstName(dto.firstName());
+        entity.setMiddleName(dto.middleName());
+        entity.setLastName(dto.lastName());
+        entity.setDateOfBirth(dto.dateOfBirth());
+        entity.setEnrollmentYear(dto.enrollmentYear());
+        entity.setGraduated(dto.graduated());
+        entity.setHouse(houseRepository.findById(dto.house()).orElse(null));
+        entity.setPrefect(dto.prefect());
+        entity.setGraduationYear(dto.graduationYear());
+        entity.setId(dto.id());
+        return entity;
     }
 
     private StudentResponseDTO toDTO(Student entity) {
-        StudentResponseDTO dto = new StudentResponseDTO();
-        dto.setFirstName(entity.getFirstName());
-        dto.setMiddleName(entity.getMiddleName());
-        dto.setLastName(entity.getLastName());
-        dto.setDateOfBirth(entity.getDateOfBirth());
-        dto.setEnrollmentYear(entity.getEnrollmentYear());
-        dto.setGraduated(entity.isGraduated());
-        dto.setHouse(entity.getHouse().getName());
-        dto.setPrefect(entity.isPrefect());
-        dto.setGraduationYear(entity.getGraduationYear());
-        dto.setId(entity.getId());
 
-        return dto;
+
+        return new StudentResponseDTO((entity.getId()), (entity.getFirstName()),
+                (entity.getMiddleName()),
+                (entity.getLastName()),
+                (entity.getDateOfBirth()),
+                (entity.getHouse().getName()),
+                (entity.isPrefect()),
+                (entity.getEnrollmentYear()),
+                (entity.getGraduationYear()),
+                (entity.isGraduated())
+
+
+        );
     }
 
 }
